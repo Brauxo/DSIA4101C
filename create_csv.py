@@ -48,7 +48,11 @@ class cleaning:
             if vitesses:
                 for vitesse in vitesses:
                     if 'detail' in vitesse:
-                        vitesses_clean.append(vitesse.get('detail', None))
+                        # Tente de convertir en entier, sinon mets None
+                        try:
+                            vitesses_clean.append(int(vitesse.get('detail')))
+                        except (ValueError, TypeError):
+                            vitesses_clean.append(None)
 
             data_list.append({
                 'code_ligne': code_ligne,
@@ -79,6 +83,7 @@ def data_process(url, csv_path="cleaned_data.csv"):
 
     cleaned_data.to_csv(csv_path, index=False)
     print(f"Data has been exported to: {csv_path}")
+
 
     return cleaned_data
 
