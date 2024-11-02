@@ -2,12 +2,12 @@ library(shiny)
 library(leaflet)
 
 # Server logic
-server <- function(input, output, session) {
+server <- function(input, output) {
+  # Charger les données
+  data <- read.csv('Data.csv')  # Assurez-vous que le CSV est formaté correctement
   
-  # Render a blank map
+  # Rendre la carte Leaflet en fonction de l'option sélectionnée
   output$map <- renderLeaflet({
-    leaflet() %>%
-      addTiles(urlTemplate = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png") %>%
-      setView(lng = 1.888334, lat = 46.603354, zoom = 6)  # Center on France
+    create_map(data, filter_option = input$lgv_option)
   })
 }
