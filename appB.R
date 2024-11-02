@@ -1,38 +1,10 @@
 library(shiny)
+library(bslib)
 library(leaflet)
 library(jsonlite)
 library(shinydashboard)
-
-# Lire les données à partir du fichier JSON
-df <- fromJSON('data.json')  # Assurez-vous que le chemin vers le JSON est correct
-
-# Fonction pour extraire la vitesse maximale
-extract_max_speed <- function(row) {
-  if (!is.null(row$vitesses) && length(row$vitesses) > 0) {
-    speeds <- sapply(row$vitesses, function(v) v$detail)
-    return(max(speeds, na.rm = TRUE))  # Ignorer les NA ici
-  }
-  return(0)
-}
-
-# Fonction pour déterminer la couleur de la ligne
-determine_color <- function(max_speed, filter_option, code_line) {
-  if (is.na(max_speed)) {
-    return(NULL)
-  }
-  
-  if (filter_option == "LGV" && max_speed < 250) {
-    return(NULL)
-  }
-  if (filter_option == "classique" && max_speed >= 250) {
-    return(NULL)
-  }
-  if (filter_option == "LGVC" && max_speed < 250 && !(code_line %in% c(14000, 5000))) {
-    return(NULL)
-  }
-  return(ifelse(max_speed >= 250, "green", "royalblue"))
-}
-
+# Lire les données à partir du fichier CSV
+df <- read.csv('Data.csv')
 # Fonction pour créer la carte en fonction de l'option de filtrage
 create_map <- function(data, filter_option = "both") {
   map_object <- leaflet() %>%
@@ -41,41 +13,47 @@ create_map <- function(data, filter_option = "both") {
   
   line_count <- 3347
   filtered_data <- head(data, line_count)
-  
   for (i in 1:nrow(filtered_data)) {
-    row <- filtered_data[i, , drop = FALSE]
+    row <- filtered_data[i, ]
     coordinates <- row$coordinates
-    
-    # Vérifiez que les coordonnées ne sont pas nulles
     if (!is.null(coordinates) && length(coordinates) > 0) {
-      # Si les coordonnées sont au format JSON, les convertir
-      if (is.character(coordinates)) {
-        coordinates <- fromJSON(coordinates)
-      }
-      
       filtered_coordinates <- lapply(coordinates, function(coord) {
         if (is.list(coord) && length(coord) == 2) {
-          return(c(coord[[2]], coord[[1]]))  # lat, lon order
+          return(c(coord[2], coord[1]))  # lat, lon order
         }
       })
       filtered_coordinates <- Filter(Negate(is.null), filtered_coordinates)
       
       if (length(filtered_coordinates) >= 2) {
-        max_speed <- extract_max_speed(row)  # Extraire la vitesse maximale
-        color <- determine_color(max_speed, filter_option, row$code_ligne)
-        
-        if (!is.null(color)) {
-          map_object <- addPolylines(map_object, 
-                                     lng = sapply(filtered_coordinates, `[[`, 2), 
-                                     lat = sapply(filtered_coordinates, `[[`, 1), 
-                                     color = color, weight = 1, opacity = 1)
+        if (!is.null(row$vitesses) && length(row$vitesses) > 0) {
+          vitesses_detail <- sapply(row$vitesses, function(v) v$detail)
+          max_vitesse <- ifelse(length(vitesses_detail) > 0, max(vitesses_detail), 0)
+        } else {
+          max_vitesse <- 0
         }
+        if (!is.null(row$code_ligne)) {
+          code_ligne <- row$code_ligne
+        } else {
+          code_ligne <- 0
+        }
+        color <- ifelse(max_vitesse >= 250, "green", "royalblue")
+        if (filter_option == "LGV" && max_vitesse < 250) next
+        if (filter_option == "classique" && max_vitesse >= 250) next
+        if (filter_option == "LGVC" && max_vitesse < 250 && !(code_ligne %in% c(14000, 5000))) next
+        if (filter_option == "LGVC") color <- "green"
+        
+        map_object <- addPolylines(map_object, 
+                                   lng = sapply(filtered_coordinates, `[[`, 2), 
+                                   lat = sapply(filtered_coordinates, `[[`, 1), 
+                                   color = color, weight = 1, opacity = 1)
       }
     }
   }
   
   return(map_object)
 }
+
+
 
 # Définir l'interface utilisateur (UI) du dashboard
 ui <- dashboardPage(
@@ -138,18 +116,14 @@ ui <- dashboardPage(
   )
 )
 
-# Définir la logique du serveur
-server <- function(input, output) {
+# Server logic
+server <- function(input, output, session) {
+  
+  # Render a blank map
   output$map <- renderLeaflet({
-    # Filtrer les données pour enlever les lignes sans coordonnées ou vitesses valides
-    valid_data <- df[!is.na(df$coordinates) & sapply(df$vitesses, function(v) length(v) > 0), ]
-    
-    # Vérifiez que nous avons des données valides après le filtrage
-    if (nrow(valid_data) == 0) {
-      stop("Aucune donnée valide pour afficher la carte.")
-    }
-    
-    create_map(valid_data, filter_option = input$lgv_option)
+    leaflet() %>%
+      addTiles(urlTemplate = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png") %>%
+      setView(lng = 1.888334, lat = 46.603354, zoom = 6)  # Center on France
   })
 }
 

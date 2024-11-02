@@ -50,8 +50,6 @@ class Cleaning:
             geometry = feature.get('geometry')
             coordinates = geometry.get('coordinates') if geometry else None
 
-            # Conversion des coordonnées en chaîne JSON
-            coordinates_json = json.dumps(coordinates) if coordinates else None
 
             # Remplacer les valeurs NaN par null pour eviter les bugs de conversion
             pk_debut = "null" if pd.isna(pk_debut) else pk_debut
@@ -67,7 +65,7 @@ class Cleaning:
                 'pk_fin': pk_fin,
                 'statut': statut,
                 'troncon': troncon,
-                'coordinates': coordinates_json,
+                'coordinates': coordinates,
                 'cantonnements': cantonnements,
                 'electrifications': electrifications,
                 'type_ligne': type_ligne,

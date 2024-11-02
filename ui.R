@@ -1,7 +1,6 @@
 library(shiny)
 library(shinydashboard)
 library(leaflet)  # Ensure leaflet is loaded
-
 ui <- dashboardPage(
   dashboardHeader(
     title = tags$div(
