@@ -1,0 +1,283 @@
+/* Reset margins and paddings */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+/* Conteneur principal qui occupe toute la hauteur */
+.page-content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #122d86; /* Couleur d'origine */
+    height: 3.5rem;
+    padding: 20px;
+    border-radius: 0;
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
+
+/* Title */
+.header-title {
+    color: #ffffff;
+    font-family: 'Helvetica', sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Titre principal de la page */
+.page-title {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* Navbar centrée avec une largeur fixe */
+.navbar {
+    display: flex;
+    justify-content: center;
+    background-color: rgba(209, 208, 208, 0.911);
+    border-radius: 15px;
+    padding: 5px 20px;
+    position: relative;
+    top: 0rem;
+    z-index: 1000;
+    box-shadow: none;
+    width: 400px;
+    margin: 0 auto;
+    backdrop-filter: blur(10px);
+}
+
+/* Links in the Navbar */
+.navbar a {
+    color: #1A1A1A;
+    text-decoration: none;
+    margin: 0 20px;
+    font-size: 20px;
+    position: relative;
+}
+
+/* Icônes dans la Navbar */
+.nav-icon {
+    width: 40px;
+    height: 40px;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Agrandit les icônes au survol */
+.navbar a:hover .nav-icon {
+    transform: scale(1.4);
+}
+
+/* Texte au survol pour chaque lien */
+.home-icon:hover::after,
+.map-icon:hover::after,
+.chart-icon:hover::after,
+.us-icon:hover::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 16px;
+    color: #000000;
+    background-color: rgba(209, 208, 208, 0.911);
+    padding: 2px 5px;
+    border-radius: 5px;
+    white-space: nowrap;
+    z-index: 10;
+}
+
+/* Texte spécifique pour chaque icône */
+.home-icon:hover::after { content: 'Home'; }
+.map-icon:hover::after { content: 'Map'; }
+.chart-icon:hover::after { content: 'Bar Chart'; }
+.us-icon:hover::after { content: 'About us'; }
+
+/* Footer */
+.footer {
+    display: flex;
+    justify-content: space-between;
+    color: #ffffff;
+    background-color: #122d86;
+    height: 2rem;
+    align-items: center;
+    padding: 30px;
+    border-radius: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    width: 100%;
+    position: relative;
+    bottom: 0;
+}
+
+/* Si le contenu est court, le footer se place en bas de la page */
+.page-content {
+    flex-grow: 1;
+}
+
+/* Logo */
+.logo {
+    border-radius: 5px;
+    max-width: 150px;
+    max-height: 80px;
+    margin: 0 15px;
+}
+
+/* Titre des unités */
+.unit {
+    text-align: center;
+    text-decoration: underline;
+    font-size: 12px;
+    margin: 0;
+}
+
+/* Credits */
+.credits {
+    text-align: center;
+    font-size: 12px;
+    margin: 0;
+}
+
+/* Copyright */
+.copyright {
+    text-align: center;
+    font-style: italic;
+    font-size: 12px;
+    margin: 0;
+}
+
+/* Section de profils avec deux colonnes pour les cartes */
+.profile-section {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+    padding: 0 5%;
+}
+
+/* Carte de profil */
+.profile-card {
+    width: 300px;
+    height: auto;
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+    border: 1px solid gray;
+    border-radius: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+    margin: 15px;
+}
+
+/* Nom dans la carte de profil */
+.name-title {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Image de profil */
+.profile-img {
+    width: 150px;
+    height: 200px;
+    border-radius: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Texte de profil */
+.profile-text {
+    text-align: justify;
+    margin-top: 1rem;
+    padding: 0 10px;
+}
+
+/* Infos de contact */
+.contact-info {
+    text-align: center;
+    margin-top: 10px;
+    padding: 0 10px;
+}
+
+/* Section pour les logiciels */
+.software-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 0px;
+}
+
+/* Carte pour chaque logiciel */
+.software-item {
+    width: auto;
+    display: inline-block;
+    text-align: center;
+    margin: 10px;
+}
+
+/* Logo de chaque logiciel */
+.software-logo {
+    width: auto;
+    height: 80px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Conteneur de grille pour afficher les cartes en deux colonnes */
+.map-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Deux colonnes égales */
+    row-gap: 20px; /* Espace vertical entre les lignes */
+    column-gap: 20px;
+    justify-items: center;
+    margin: 30px
+}
+
+/* Conteneur pour chaque carte avec son titre */
+.map-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #d3d3d3;
+    border-radius: 10px;
+    width: 100%; /* Occupe toute la largeur de la colonne */
+}
+
+/* Titre de chaque carte */
+.map-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 10px 0;
+    text-align: center;
+}
+
+/* Iframe pour les cartes */
+.map-iframe {
+    width: 100%; /* Utilise toute la largeur disponible dans .map-item */
+    height: 450px; /* Ajustement de la hauteur pour un meilleur affichage */
+    border: none;
+}
+
+
