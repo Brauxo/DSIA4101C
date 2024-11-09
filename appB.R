@@ -162,7 +162,7 @@ create_about_us <- function() {
   
   
   # Logiciels utilisés
-  software_images <- c("python_logo.png", "dash_logo.png", "pycharm_logo.png", "github_logo.png", "css_logo.png")
+  software_images <- c("R_logo.png","logo_shiny.png","R_studio.png","python_logo.png", "github_logo.png", "css_logo.png")
   software_section <- lapply(software_images, function(img) {
     div(
       img(src = img, class = "software-logo", alt = paste("Logo", gsub("_", " ", sub(".png", "", img))), style = "width: 100px; height: 100px; object-fit: contain; margin-right: 10px;"),
