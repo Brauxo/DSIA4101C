@@ -13,7 +13,7 @@ Pour la réalisation de ce projet, nous avons utilisé différentes données iss
 # Sommaire
 ## Guide de l'application
 1. [Prérequis d'installation](#1---Prérequis-dinstallation)
-2. [Lancer l'application sous Rstudio](#2---Lancer-lapplication-sous-Rstudio)
+2. [Lancer l'application sous Rstudio](#2---Lancer-lapplication)
 3. [Présentation du Dashboard](#3---Présentation-du-dashboard)
 
 ## Analyse des données
