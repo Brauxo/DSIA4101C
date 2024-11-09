@@ -87,19 +87,19 @@ Cette section présente le fonctionnement du Dashboard une fois que la page a é
 ### Navigation dans le Dashboard
 Pour naviguer dans le dashboard on utilise le menu sur le côté et on clique sur la catégorie qui nous interesse. 
 <div align="center">
-  <img src="https://github.com/Brauxo/DSIA4101A/blob/main/visualizer/assets/navbar_R.png"/>
+  <img src="https://github.com/Brauxo/DSIA4101C/blob/main/www/navbar_R.png"/>
 </div>
 
 ### Page d'accueil 
 Normalement lorsqu'on arrive sur le dashboard, la page d'accueil est la première page montré, celle-ci elle présente vaguement le contenu du dashboard.
 <div align="center">
-  <img src="https://github.com/Brauxo/DSIA4101A/blob/main/visualizer/assets/home_R.png"/>
+  <img src="https://github.com/Brauxo/DSIA4101C/blob/main/www/home_R.png"/>
 </div>
 
 ### Page d'information sur nous et ce projet
 Cette page contient les informations sur les outils utilisés et sur nous.
 <div align="center">
-  <img src="https://github.com/Brauxo/DSIA4101A/blob/main/visualizer/assets/aboutus_R.png"/>
+  <img src="https://github.com/Brauxo/DSIA4101A/blob/main/www/aboutus_R.png"/>
 </div>
 
 ### Page des histogrammes
