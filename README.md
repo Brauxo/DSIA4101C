@@ -99,7 +99,7 @@ Normalement lorsqu'on arrive sur le dashboard, la page d'accueil est la premièr
 ### Page d'information sur nous et ce projet
 Cette page contient les informations sur les outils utilisés et sur nous.
 <div align="center">
-  <img src="https://github.com/Brauxo/DSIA4101A/blob/main/www/aboutus_R.png"/>
+  <img src="https://github.com/Brauxo/DSIA4101C/blob/main/www/aboutus_R.png"/>
 </div>
 
 ### Page des histogrammes
