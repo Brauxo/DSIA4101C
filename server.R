@@ -17,17 +17,18 @@ df <- df %>% mutate(distance_troncon = pk_fin - pk_debut)
 
 # Define server logic
 server <- function(input, output, session) {
-  # Reactive filtered data based on user input for charts
-  filtered_data <- reactive({
-    if (input$line_type == "LGV") {
+  # Données filtrées en fonction de la sélection de l'utilisateur (pour l'histogramme)
+  filtered_data_histogram <- reactive({
+    if (input$line_type_histogram == "LGV") {
       vitesses_df %>% filter(detail >= 250)
-    } else if (input$line_type == "classique") {
+    } else if (input$line_type_histogram == "classique") {
       vitesses_df %>% filter(detail < 250)
     } else {
       vitesses_df
     }
   })
-  
+ 
+ 
   # Render the map with all lines using coordinates
   output$map <- renderLeaflet({
     # Create a Leaflet map centered on France
@@ -74,13 +75,15 @@ server <- function(input, output, session) {
   
   # Histogramme des Vitesses
   output$histogram_vitesses <- renderPlotly({
-    plot_ly(
-      data = vitesses_df,
-      x = ~detail,
-      type = 'histogram',
-      nbinsx = 30
-    ) %>%
-      layout(title = "Distribution des Vitesses", xaxis = list(title = "Vitesse (km/h)"))
+    filtered_data_histogram() %>%
+      plot_ly(
+        x = ~detail,
+        type = 'histogram',
+        nbinsx = 30  # Ajustez le nombre de bacs pour l'histogramme
+      ) %>%
+      layout(title = "Histogramme des Vitesses", 
+             xaxis = list(title = "Vitesses"),
+             yaxis = list(title = "Fréquence"))
   })
   
   # Camembert des Vitesses

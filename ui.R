@@ -132,10 +132,7 @@ ui <- dashboardPage(
       menuItem("Histogramme", tabName = "histogram", icon = icon("chart-simple")),
       menuItem("Cartographie", tabName = "map", icon = icon("map-location")),
       menuItem("Pie Chart", tabName = "piechart_vitesses", icon = icon("chart-pie")),
-      menuItem("Distribution", tabName = "scatterplot_vitesses", icon = icon("th")),
-      selectInput("line_type", "Sélectionner le type de ligne:", 
-                  choices = c("Toutes les lignes" = "both", "Lignes classiques" = "classique", "Lignes grande vitesse (LGV)" = "LGV"),
-                  selected = "both")
+      menuItem("Distribution", tabName = "scatterplot_vitesses", icon = icon("th"))
     )
   ),
   dashboardBody(
@@ -158,11 +155,21 @@ ui <- dashboardPage(
       tabItem(tabName = "histogram",
               fluidRow(
                 box(
+                  title = "Sélectionnez le type de ligne",
+                  solidHeader = TRUE,
+                  status = "primary",
+                  width = 12,
+                  selectInput("line_type_histogram",  
+                              label = "Remarque : cela prend un moment a charger",
+                              choices = c("Tous", "LGV", "classique"),
+                              selected = "Tous")
+                ),
+                box(
                   title = "Histogramme des Vitesses",
                   solidHeader = TRUE,
                   status = "primary",
                   width = 12,
-                  plotlyOutput("histogram_vitesses", height = "400px")
+                  plotlyOutput("histogram_vitesses", height = "400px")  
                 )
               )
       ),
