@@ -189,7 +189,9 @@ Ce guide ne se concentre pas sur une compréhension exhaustive du code, mais sur
 Le code est structuré en trois fichiers principaux pour faciliter la modularité :
 
 ui.R : Définit l'interface utilisateur (UI) du Dashboard.
+
 server.R : Contient la logique du serveur pour exécuter les interactions utilisateur.
+
 app.R : Point d'entrée qui appelle ui.R et server.R.
 
 ## 3 - Ajouter une page
