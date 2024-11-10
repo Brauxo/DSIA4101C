@@ -23,7 +23,7 @@ Pour la réalisation de ce projet, nous avons utilisé différentes données iss
 ## Guide du developpeur
 1. [Contexte](#1---Contexte)
 2. [Architecture du code](#2---Architecture-du-code)
-3. [Ajouter une page](#2---Ajouter-une-page)
+3. [Suggestions d'améliorations futures](#3---Suggestions-daméliorations-futures)
 ---
 
 # Guide de l'application
@@ -75,6 +75,10 @@ Après avoir suivi les étapes d'installation, vous pouvez démarrer l'applicati
 ```
 Rscript app.R
 ```
+Cependant si les fichiers shiny on mal été chargés, la solution est d'executé cette ligne :
+```
+shiny::runApp("app.R")
+```
 
 Si tout se passe comme prévu, Vous allez obtenir une nouvelle fenêtre avec l'application
 Normalement l'application est en cours d'exécution en local (localhost) à l'adresse indiquée.
@@ -104,15 +108,24 @@ Cette page contient les informations sur les outils utilisés et sur nous.
 
 ### Page des histogrammes
 Cette page permet d'obtenir des informations sous forme d'histogrammes sur les chemins de fer français.
+<div align="center">
+  <img src="https://github.com/Brauxo/DSIA4101C/blob/main/www/histo_R.png"/>
+</div>
 
 ### Page de la carte 
 La page qui montre différentes cartes des chemins de fer français (LGV,Toutes,Lignes classiques), cette page utilise les callbacks pour mettre à jour en direct les cartes.
 
 ### Page des Pie charts
 Cette page permet d'obtenir des informations sous forme de camemberts sur les chemins de fer français.
+<div align="center">
+  <img src="https://github.com/Brauxo/DSIA4101C/blob/main/www/pie_speed_R.png"/>
+</div>
 
 ### Page des distributions
 Cette page permet d'obtenir des informations sous forme de scatterplot sur les chemins de fer français.
+<div align="center">
+  <img src="https://github.com/Brauxo/DSIA4101C/blob/main/www/scatter_R.png"/>
+</div>
 
 
 # Analyse des données
@@ -125,20 +138,6 @@ L'objectif de ce projet est de fournir un aperçu général et en temps réel de
 
 #### Analyse Ligne à grande vitesse (LGV)
 
-La **première** **carte**  montre l'entièreté des lignes  générées à partir des données de la sncf, ces lignes sont variées et peuvent être actuellement hors-service.
-
-La **deuxième** **carte**  montre les lignes  générées à partir des données qui ne sont pas des lignes à grandes vitesses (<= 250 km/h), ce sont les lignes dites classique.
-
-La **troisème** **carte**  montre les lignes à grande vitesse (LGV) générées à partir des données. Le critère pour qu'une ligne soit considérée comme LGV est une vitesse maximale supérieure à 250 km/h. Cependant, après une vérification rapide, il apparaît que deux lignes LGV manquent sur cette carte.
-
-La **quatrième** **carte** ajoute ces deux lignes manquantes, qui ont été incluses manuellement. L'absence de ces lignes dans la première carte s'explique par des données incomplètes : la vitesse n'est pas renseignée pour ces deux lignes dans les données.
-
-Complément d'analyse : 
-
-En observant les cartes, on remarque que la majorité des lignes LGV partent ou arrivent à Paris, ce qui souligne un certain phénomène **d'enclavement** du **territoire**. Cette concentration des infrastructures autour de Paris pourrait indiquer une centralisation des transports ferroviaires, reliant principalement la capitale aux autres grandes villes, mais créant moins de connexions directes entre les régions.
-
-#### Analyse des graphiques :
-
 Les graphiques sur les voies ferroviaires en France montrent une répartition intéressante des lignes, en fonction de leur vitesse, de leur électrification et de la taille des tronçons.
 
 **Les** **vitesses** 
@@ -146,35 +145,49 @@ Les graphiques sur les voies ferroviaires en France montrent une répartition in
 Pour les lignes à grande vitesse, on observe qu'elles sont bien représentées, avec 17 tronçons qui roulent à 270 et 300 km/h. On trouve aussi 4 tronçons à 320 km/h et un seul qui atteint 350 km/h. Cela montre que, même si la majorité des LGV roulent à des vitesses proches de 300 km/h, il existe quelques lignes qui vont encore plus vite atteignant une vitesse max de 350 km/h.
 Pour lignes classiques, la situation est bien différente. La majorité des tronçons sont assez lents, avec 23,7% des lignes classiques circulant à seulement 30 km/h. celle-ci semblent être régionales en observant sur la carte et repésentent de plus petites distances.
 
+<div align="center">
+  <img src="https://github.com/Brauxo/DSIA4101A/blob/main/visualizer/assets/histo_speed.png"/>
+</div>
+
 **L’électrification** **des** **lignes** 
 
 En termes d’électrification, on remarque que 67,8% des lignes sont alimentées par un système de 25 000 volts, ce qui est principalement destiné aux LGV. 31,3% des tronçons utilisent un système de 1 500 volts, plus couramment utilisé pour les lignes classiques et régionales. Les autres systèmes d’alimentation, bien que présents, représentent une proportion très faible du réseau mais on peut noté des précisions comme des volts continu par 3 ème rail qui après une recherche sur internet représente les lignes avec un rail supplémentaire.
 
+<div align="center">
+  <img src="https://github.com/Brauxo/DSIA4101A/blob/main/visualizer/assets/piechart_electric.png"/>
+</div>
+
 **La** **taille** **des** **segments** 
 
 Enfin, en ce qui concerne la taille des tronçons, la plupart d'entre eux mesurent moins de 125 km (environ 98% d'entre eux), bien que certains tronçons soient plus longs, notamment le plus grand se situant entre 825 et 875 km. Cela montre que le réseau français est en grande majorité composé de lignes assez courtes, adaptées aux trajets régionaux, même si certaines lignes longues sont concentrées sur les grands axes à grande vitesse. Par ailleurs les troncons les plus grands correpondent aux LGV. 
+
+<div align="center">
+  <img src="https://github.com/Brauxo/DSIA4101A/blob/main/visualizer/assets/histo_segment.png"/>
+</div>
+---
+
 
 ---
 # Guide du développeur
 
 ## 1 - Contexte
 
-Ce guide développeur présente les objectifs, l'architecture, et la structure de notre projet. Il est conçu pour faciliter l’ajout de nouvelles fonctionnalités et assurer la maintenabilité du code.
+Ce guide développeur présente les objectifs, l'architecture et la structure de notre projet. Il est conçu pour faciliter l'ajout de nouvelles fonctionnalités et garantir la maintenabilité du code.
 
-Pour garantir la compréhension du code par le plus grand nombre, nous avons choisi de coder en anglais et de respecter les conventions **PEP-8** pour assurer une lisibilité et une cohérence optimales.
+Afin d'assurer une compréhension optimale du code par le plus grand nombre, nous avons choisi de coder en anglais et de respecter les conventions de style du Tidyverse. 
 
-Ce guide ne s'attarde pas sur une compréhension exhaustive des codes. Nous expliquons nos choix de conception, les raisons de ces choix, ainsi que la structure logique qui encadre le projet.
+Ce guide ne se concentre pas sur une compréhension exhaustive du code, mais sur nos choix de conception, les raisons qui les sous-tendent et la structure logique du projet.
 
 ## 2 - Architecture du code
 
-
-## 3 - Ajouter une page
-
+(A completer)
 
 
-## 4 - Suggestions d'améliorations futures
 
-- Compléter les sections incomplètes (présentation du dashboard, contexte, analyse).
-- Ajouter une description détaillée de l'interface du dashboard.
-- Inclure des captures d'écran du dashboard dans la section correspondante.
-- Décrire l'arborescence des fichiers de manière plus détaillée.
+## 3 - Suggestions d'améliorations futures
+
+- Ajouter les graphiques manquants par rapport à la version python.
+- Changer la description de l'interface du dashboard.
+- S'occuper des erreurs de callbacks
+- Essayer de créer un fichier functions.R pour ranger les fonctions
+- Pour le reste : Même suggestions qu'en python.
