@@ -14,6 +14,19 @@ library(plotly)
 # Lire les données à partir du fichier json
 df <- fromJSON('data.json')
 
+# Transformer les données imbriquées pour les graphiques
+vitesses_df <- df %>%
+  select(vitesses) %>%
+  tidyr::unnest_wider(vitesses) %>%
+  mutate(pk_debut = from)
+
+electrifications_df <- df %>%
+  select(electrifications) %>%
+  tidyr::unnest_wider(electrifications) 
+
+df <- df %>% 
+  mutate(distance_troncon = pk_fin - pk_debut)
+
 # Fonction pour créer la carte en fonction de l'option de filtrage
 create_map <- function(data, filter_option = "both") {
   map_object <- leaflet() %>%
@@ -210,8 +223,11 @@ ui <- dashboardPage(
       menuItem("À propos de nous", tabName = "about", icon = icon("info-circle")),
       menuItem("Histogramme", tabName = "histogram", icon = icon("chart-simple")),
       menuItem("Cartographie", tabName = "map", icon = icon("map-location")),
-      menuItem("Pie Chart", tabName = "piechart", icon = icon("chart-pie")),
-      menuItem("Distribution", tabName = "distribution", icon = icon("th"))
+      menuItem("Pie Chart", tabName = "piechart_vitesses", icon = icon("chart-pie")),
+      menuItem("Distribution", tabName = "scatterplot_vitesses", icon = icon("th")),
+      selectInput("line_type", "Sélectionner le type de ligne:", 
+                  choices = c("Toutes les lignes" = "both", "Lignes classiques" = "classique", "Lignes grande vitesse (LGV)" = "LGV"),
+                  selected = "both")
     )
   ),
   dashboardBody(
@@ -223,15 +239,14 @@ ui <- dashboardPage(
       tabItem(tabName = "about", create_about_us()),
       
       # Histogramme
-      tabItem(tabName = "histogramme",
+      tabItem(tabName = "histogram",
               fluidRow(
                 box(
-                  title = "Histogramme des Vitesses et Distances",
+                  title = "Histogramme des Vitesses",
                   solidHeader = TRUE,
                   status = "primary",
                   width = 12,
-                  plotlyOutput("histogram_vitesses", height = "400px"),
-                  plotlyOutput("histogram_distances", height = "400px")
+                  plotlyOutput("histogram_vitesses", height = "400px")
                 )
               )
       ),
@@ -255,17 +270,49 @@ ui <- dashboardPage(
               )
       ),
       
-      # Pie Chart
-      tabItem(tabName = "piechart", h2("Pie Chart")),
+      # Onglet Camembert des Vitesses
+      tabItem(tabName = "piechart_vitesses",
+              fluidRow(
+                box(
+                  title = "Camembert des Vitesses",
+                  solidHeader = TRUE,
+                  status = "primary",
+                  width = 12,           # Utiliser toute la largeur disponible
+                  plotlyOutput("pie_vitesses", height = "600px") # Augmenter la hauteur
+                )
+              )
+      ),
       
-      # Distribution
-      tabItem(tabName = "distribution", h2("Distribution"))
+      # Onglet Scatterplot des Vitesses
+      tabItem(tabName = "scatterplot_vitesses",
+              fluidRow(
+                box(
+                  title = "Scatterplot des Vitesses",
+                  solidHeader = TRUE,
+                  status = "primary",
+                  width = 12,
+                  plotlyOutput("scatter_vitesses", height = "400px")
+                )
+              )
+      )
     )
   )
 )
 
 # Logique serveur
 server <- function(input, output, session) {
+    # Filtrer les données selon le type de ligne sélectionné
+  filtered_data <- reactive({
+    if (input$line_type == "LGV") {
+      vitesses_df %>% filter(detail >= 250)
+    } else if (input$line_type == "classique") {
+      vitesses_df %>% filter(detail < 250)
+    } else {
+      vitesses_df
+    }
+  })
+  
+  
   # Carte vide au départ
   output$map <- renderLeaflet({
     leaflet() %>%
@@ -281,15 +328,38 @@ server <- function(input, output, session) {
     })
   })
   
-  # Afficher les histogrammes
-  histograms <- create_histogram(df)
-  
+  # Histogramme des Vitesses
   output$histogram_vitesses <- renderPlotly({
-    histograms[[1]]
+    plot_ly(
+      data = vitesses_df,
+      x = ~detail,
+      type = 'histogram',
+      nbinsx = 30
+    ) %>%
+      layout(title = "Distribution des Vitesses", xaxis = list(title = "Vitesse (km/h)"))
   })
   
-  output$histogram_distances <- renderPlotly({
-    histograms[[2]]
+  # Camembert des Vitesses
+  output$pie_vitesses <- renderPlotly({
+    plot_ly(
+      data = vitesses_df,
+      labels = ~detail,
+      type = 'pie',
+      textinfo = 'none'  # Hide all text labels, including percentages
+    ) %>%
+      layout(title = "Répartition des Vitesses")
+  })
+  
+  # Scatterplot des Vitesses par Position de Début
+  output$scatter_vitesses <- renderPlotly({
+    plot_ly(
+      data = vitesses_df,
+      x = ~pk_debut,
+      y = ~detail,
+      type = 'scatter',
+      mode = 'markers'
+    ) %>%
+      layout(title = "Position de Début vs Vitesses", xaxis = list(title = "Position de Début (pk_debut)"), yaxis = list(title = "Vitesse (km/h)"))
   })
 }
 
