@@ -182,7 +182,9 @@ Afin d'assurer une compréhension optimale du code par le plus grand nombre, nou
 Ce guide ne se concentre pas sur une compréhension exhaustive du code, mais sur nos choix de conception, les raisons qui les sous-tendent et la structure logique du projet.
 
 ## 2 - Architecture du code
-
+<div align="center">
+<img src="https://github.com/user-attachments/assets/a783cd4e-a777-4ef0-a3b0-8cbccc8ce316"/>
+</div>
 (A completer)
 
 
