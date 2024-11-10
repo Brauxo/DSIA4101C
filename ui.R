@@ -176,13 +176,6 @@ ui <- dashboardPage(
       
       # Cartographie
       tabItem(tabName = "map",
-              fluidRow(
-                selectInput(
-                  inputId = "lgv_option",
-                  label = "Choisissez une option:",
-                  choices = list("Toutes les lignes" = "both", "LGV" = "LGV", "Lignes classiques" = "classique", "LGV complété" = "LGVC"),
-                  selected = "both"
-                ),
                 box(
                   width = 9,
                   status = "primary",
@@ -190,7 +183,6 @@ ui <- dashboardPage(
                   leafletOutput("map", height = "600px", width = "100%"),
                   id = "map-box"
                 )
-              )
       ),
       
       # Onglet Camembert des Vitesses
