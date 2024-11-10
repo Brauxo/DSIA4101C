@@ -185,11 +185,21 @@ Ce guide ne se concentre pas sur une compréhension exhaustive du code, mais sur
 <div align="center">
 <img src="https://github.com/user-attachments/assets/a783cd4e-a777-4ef0-a3b0-8cbccc8ce316"/>
 </div>
-(A completer)
 
+Le code est structuré en trois fichiers principaux pour faciliter la modularité :
 
+ui.R : Définit l'interface utilisateur (UI) du Dashboard.
+server.R : Contient la logique du serveur pour exécuter les interactions utilisateur.
+app.R : Point d'entrée qui appelle ui.R et server.R.
 
-## 3 - Suggestions d'améliorations futures
+## 3 - Ajouter une page
+Pour ajouter une nouvelle page dans le Dashboard :
+
+Créer la page dans ui.R : Ajoutez une fonction de page dans ui.R avec les éléments de la nouvelle page.
+
+Définir la logique dans server.R : Ajoutez une fonction dans server.R pour gérer les interactions de cette nouvelle page, telles que les graphiques ou les cartes.
+
+## 4 - Suggestions d'améliorations futures
 
 - Ajouter les graphiques manquants par rapport à la version python.
 - Changer la description de l'interface du dashboard.
