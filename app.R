@@ -1,7 +1,15 @@
 library(shiny)
+library(bslib)
+library(leaflet)
+library(jsonlite)
+library(shinydashboard)
+library(dplyr)
+library(tidyr)
+library(plotly)
 
-# Charger les données
-df <- read.csv("Data.csv", sep = ",")
+# Load UI and Server components
+source("server.R")
+source("ui.R")
 
-# Lancer l'application
+# Run the application
 shinyApp(ui = ui, server = server)

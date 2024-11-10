@@ -1,12 +1,108 @@
-library(shiny)
 library(leaflet)
-# Server logic
+library(jsonlite)
+library(dplyr)
+library(tidyr)
+library(plotly)
+
+# Load and preprocess data
+df <- fromJSON('data.json')
+vitesses_df <- df %>%
+  select(vitesses) %>%
+  tidyr::unnest(vitesses) %>%
+  mutate(pk_debut = from, pk_fin = to)
+electrifications_df <- df %>%
+  select(electrifications) %>%
+  tidyr::unnest_wider(electrifications)
+df <- df %>% mutate(distance_troncon = pk_fin - pk_debut)
+
+# Define server logic
 server <- function(input, output, session) {
+  # Reactive filtered data based on user input for charts
+  filtered_data <- reactive({
+    if (input$line_type == "LGV") {
+      vitesses_df %>% filter(detail >= 250)
+    } else if (input$line_type == "classique") {
+      vitesses_df %>% filter(detail < 250)
+    } else {
+      vitesses_df
+    }
+  })
   
-  # Render a blank map
+  # Render the map with all lines using coordinates
   output$map <- renderLeaflet({
-    leaflet() %>%
-      addTiles(urlTemplate = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png") %>%
-      setView(lng = 1.888334, lat = 46.603354, zoom = 6)  # Center on France
+    # Create a Leaflet map centered on France
+    map <- leaflet() %>%
+      addTiles() %>%
+      setView(lng = 2.2137, lat = 46.2276, zoom = 6)
+    
+    # Loop through each row in df to add polylines
+    for (i in 1:nrow(df)) {
+      ligne <- df[i, ]
+      coords <- ligne$coordinates
+      
+      # Check if coordinates are available and contain at least two points
+      if (!is.null(coords) && length(coords) >= 2) {
+        # Transform the list of coordinates into a dataframe
+        lat_lon <- do.call(rbind, lapply(coords, function(x) {
+          if (is.numeric(x) && length(x) == 2) {
+            return(data.frame(lat = x[2], lng = x[1]))
+          } else {
+            NULL  # Ignore non-numeric or incorrectly structured coordinates
+          }
+        }))
+        
+        # Remove any NULL rows from lat_lon
+        lat_lon <- lat_lon[!is.na(lat_lon$lat) & !is.na(lat_lon$lng), ]
+        
+        # Add the polyline to the map if there are valid coordinates
+        if (nrow(lat_lon) >= 2) {
+          map <- addPolylines(
+            map,
+            data = lat_lon,
+            lng = ~lng,
+            lat = ~lat,
+            color = "blue",
+            weight = 1,
+            opacity = 1
+          )
+        }
+      }
+    }
+    map
+  })
+  
+  
+  # Histogramme des Vitesses
+  output$histogram_vitesses <- renderPlotly({
+    plot_ly(
+      data = vitesses_df,
+      x = ~detail,
+      type = 'histogram',
+      nbinsx = 30
+    ) %>%
+      layout(title = "Distribution des Vitesses", xaxis = list(title = "Vitesse (km/h)"))
+  })
+  
+  # Camembert des Vitesses
+  output$pie_vitesses <- renderPlotly({
+    plot_ly(
+      data = vitesses_df,
+      labels = ~detail,
+      type = 'pie',
+      textinfo = 'none'  # Hide all text labels, including percentages
+    ) %>%
+      layout(title = "Répartition des Vitesses")
+  })
+  
+  # Scatterplot des Vitesses par Position de Début
+  output$scatter_vitesses <- renderPlotly({
+    plot_ly(
+      data = vitesses_df,
+      x = ~pk_debut,
+      y = ~detail,
+      type = 'scatter',
+      mode = 'markers'
+    ) %>%
+      layout(title = "Position de Début vs Vitesses", xaxis = list(title = "Position de Début (pk_debut)"), yaxis = list(title = "Vitesse (km/h)"))
   })
 }
