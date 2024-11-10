@@ -114,6 +114,9 @@ Cette page permet d'obtenir des informations sous forme d'histogrammes sur les c
 
 ### Page de la carte 
 La page qui montre différentes cartes des chemins de fer français (LGV,Toutes,Lignes classiques), cette page utilise les callbacks pour mettre à jour en direct les cartes.
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/b297157e-3e26-46ad-a52b-7f428b820eb3"/>
+</div>
 
 ### Page des Pie charts
 Cette page permet d'obtenir des informations sous forme de camemberts sur les chemins de fer français.
